@@ -1,0 +1,1404 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Relatório de Investimento — Avantis</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ── Custom Properties ── */
+:root {
+  --bg: #0a0e1a;
+  --bg-subtle: #0f1425;
+  --surface: rgba(255,255,255,0.04);
+  --surface-hover: rgba(255,255,255,0.07);
+  --glass: rgba(255,255,255,0.06);
+  --glass-border: rgba(255,255,255,0.1);
+  --glass-border-strong: rgba(255,255,255,0.15);
+  --text: #f0f0f5;
+  --text-secondary: rgba(240,240,245,0.6);
+  --text-tertiary: rgba(240,240,245,0.4);
+  --accent: #6c5ce7;
+  --accent-glow: rgba(108,92,231,0.3);
+  --green: #00d68f;
+  --green-bg: rgba(0,214,143,0.12);
+  --gray-badge: rgba(255,255,255,0.08);
+  --gray-badge-text: rgba(240,240,245,0.5);
+  --bar-1: #6c5ce7;
+  --bar-2: #a29bfe;
+  --bar-3: #74b9ff;
+  --bar-4: #55efc4;
+  --bar-5: #fd79a8;
+  --bar-6: #ffeaa7;
+  --bar-7: #e17055;
+  --radius: 16px;
+  --radius-sm: 10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+
+/* ── Reset ── */
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  font-family: var(--font);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  min-height: 100vh;
+  overflow-x: hidden;
+}
+
+/* ── Scroll progress bar ── */
+.scroll-progress {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0%;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), #a29bfe, #fd79a8);
+  z-index: 9999;
+  transition: width 0.05s linear;
+  will-change: width;
+}
+
+/* ── Background gradient mesh with animation ── */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 60% 50% at 20% 10%, rgba(108,92,231,0.12) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 80% 80%, rgba(0,214,143,0.08) 0%, transparent 60%),
+    radial-gradient(ellipse 40% 30% at 60% 40%, rgba(162,155,254,0.06) 0%, transparent 50%);
+  pointer-events: none;
+  z-index: 0;
+  animation: gradientShift 12s ease-in-out infinite alternate;
+}
+
+@keyframes gradientShift {
+  0% {
+    transform: scale(1) translate(0, 0);
+    opacity: 1;
+  }
+  33% {
+    transform: scale(1.05) translate(2%, -1%);
+    opacity: 0.85;
+  }
+  66% {
+    transform: scale(0.97) translate(-1%, 2%);
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1.03) translate(1%, -2%);
+    opacity: 0.9;
+  }
+}
+
+/* ── Layout ── */
+.container {
+  max-width: 880px;
+  margin: 0 auto;
+  padding: 0 20px;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Scroll Reveal ── */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+}
+
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Header ── */
+.site-header {
+  padding: 48px 0 32px;
+  text-align: center;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 24px;
+}
+
+.brand-dot {
+  width: 8px;
+  height: 8px;
+  background: var(--accent);
+  border-radius: 50%;
+  box-shadow: 0 0 12px var(--accent-glow);
+}
+
+.header-title {
+  font-size: clamp(26px, 6vw, 38px);
+  font-weight: 800;
+  letter-spacing: -0.5px;
+  line-height: 1.2;
+  margin-bottom: 8px;
+}
+
+.header-subtitle {
+  font-size: 15px;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+.header-subtitle strong {
+  color: var(--text);
+  font-weight: 600;
+}
+
+.header-period {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 6px 16px;
+  border-radius: 100px;
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+  font-size: 13px;
+  color: var(--text-secondary);
+  font-weight: 500;
+}
+
+/* ── Glass Card ── */
+.glass {
+  background: var(--glass);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--radius);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+}
+
+/* ── KPI Cards ── */
+.kpi-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+  margin: 32px 0;
+}
+
+.kpi-card {
+  padding: 20px;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.kpi-card.primary {
+  grid-column: 1 / -1;
+  background: linear-gradient(135deg, rgba(108,92,231,0.15), rgba(162,155,254,0.08));
+  border-color: rgba(108,92,231,0.25);
+}
+
+.kpi-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 6px;
+}
+
+.kpi-value {
+  font-size: clamp(28px, 7vw, 42px);
+  font-weight: 800;
+  letter-spacing: -1px;
+  line-height: 1.1;
+}
+
+.kpi-card.primary .kpi-value {
+  background: linear-gradient(135deg, #a29bfe, #6c5ce7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.kpi-small {
+  font-size: clamp(22px, 5vw, 30px);
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.kpi-unit {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-top: 4px;
+  font-weight: 400;
+}
+
+/* ── Section titles ── */
+.section-label {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--text-tertiary);
+  margin-bottom: 16px;
+  padding-left: 4px;
+}
+
+/* ── Campaign Cards ── */
+.campaigns {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 40px;
+}
+
+.campaign-card {
+  padding: 16px 18px;
+  cursor: pointer;
+  transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.campaign-card:hover {
+  background: var(--surface-hover);
+  border-color: var(--glass-border-strong);
+}
+
+.campaign-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.campaign-left {
+  flex: 1;
+  min-width: 0;
+}
+
+.campaign-name {
+  font-size: 15px;
+  font-weight: 600;
+  margin-bottom: 4px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.campaign-meta {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.campaign-meta span {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 8px;
+  border-radius: 100px;
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  flex-shrink: 0;
+}
+
+.badge-active {
+  background: var(--green-bg);
+  color: var(--green);
+}
+
+.badge-inactive {
+  background: var(--gray-badge);
+  color: var(--gray-badge-text);
+}
+
+.campaign-value {
+  font-size: 18px;
+  font-weight: 700;
+  white-space: nowrap;
+  letter-spacing: -0.3px;
+}
+
+.campaign-value .currency {
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--text-secondary);
+}
+
+/* Campaign expand/collapse */
+.campaign-expand-icon {
+  width: 20px;
+  height: 20px;
+  flex-shrink: 0;
+  color: var(--text-tertiary);
+  transition: transform 0.3s ease;
+  margin-left: 8px;
+}
+
+.campaign-card.expanded .campaign-expand-icon {
+  transform: rotate(180deg);
+}
+
+.campaign-detail {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.4s ease, opacity 0.3s ease, padding 0.3s ease;
+  opacity: 0;
+  padding-top: 0;
+}
+
+.campaign-card.expanded .campaign-detail {
+  max-height: 200px;
+  opacity: 1;
+  padding-top: 14px;
+}
+
+.campaign-detail-inner {
+  border-top: 1px solid var(--glass-border);
+  padding-top: 12px;
+  font-size: 12px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+/* Timeline for Realinhamento */
+.mini-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.timeline-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.timeline-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--accent);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.timeline-item:not(:last-child) .timeline-dot::after {
+  content: '';
+  position: absolute;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 2px;
+  height: 14px;
+  background: rgba(108,92,231,0.3);
+}
+
+.timeline-label {
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.timeline-value {
+  font-weight: 600;
+  color: var(--text);
+  margin-left: auto;
+}
+
+/* ── Bar Chart ── */
+.chart-section {
+  margin-bottom: 40px;
+}
+
+.bar-chart {
+  padding: 24px;
+}
+
+.bar-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.bar-row:last-child {
+  margin-bottom: 0;
+}
+
+.bar-label {
+  width: 130px;
+  flex-shrink: 0;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-align: right;
+  line-height: 1.3;
+}
+
+.bar-track {
+  flex: 1;
+  height: 28px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 6px;
+  overflow: hidden;
+  position: relative;
+}
+
+.bar-fill {
+  height: 100%;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding-right: 8px;
+  font-size: 11px;
+  font-weight: 600;
+  color: rgba(0,0,0,0.7);
+  min-width: 48px;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.bar-fill.animated {
+  transform: scaleX(1);
+}
+
+.bar-value-outside {
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--text-secondary);
+  white-space: nowrap;
+  margin-left: 8px;
+  flex-shrink: 0;
+}
+
+/* ── Donut Chart ── */
+.donut-section {
+  margin-bottom: 40px;
+}
+
+.donut-wrapper {
+  padding: 28px 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+}
+
+.donut-chart {
+  position: relative;
+  width: 200px;
+  height: 200px;
+}
+
+.donut-chart svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.donut-chart svg circle {
+  transition: stroke-dashoffset 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.donut-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.donut-center-value {
+  font-size: 18px;
+  font-weight: 700;
+  letter-spacing: -0.5px;
+}
+
+.donut-center-label {
+  font-size: 10px;
+  font-weight: 500;
+  color: var(--text-tertiary);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
+.donut-legend {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 8px 16px;
+  width: 100%;
+  max-width: 340px;
+}
+
+.legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 12px;
+  color: var(--text-secondary);
+}
+
+.legend-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 3px;
+  flex-shrink: 0;
+}
+
+.legend-name {
+  flex: 1;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.legend-pct {
+  font-weight: 600;
+  color: var(--text);
+  flex-shrink: 0;
+}
+
+/* ── Insights ── */
+.insights-section {
+  margin-bottom: 40px;
+}
+
+.insight-card {
+  padding: 20px;
+  margin-bottom: 10px;
+}
+
+.insight-card:last-child {
+  margin-bottom: 0;
+}
+
+.insight-icon {
+  font-size: 14px;
+  margin-bottom: 8px;
+  display: block;
+}
+
+.insight-title {
+  font-size: 14px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.insight-text {
+  font-size: 13px;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* ── Footer ── */
+.site-footer {
+  padding: 32px 0 48px;
+  text-align: center;
+  border-top: 1px solid var(--glass-border);
+  margin-top: 20px;
+}
+
+.footer-text {
+  font-size: 12px;
+  color: var(--text-tertiary);
+  line-height: 1.7;
+}
+
+.footer-brand {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+/* ── AI Badge ── */
+.ai-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 16px;
+  padding: 5px 14px;
+  border-radius: 100px;
+  background: rgba(108,92,231,0.08);
+  border: 1px solid rgba(108,92,231,0.2);
+  font-size: 11px;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.ai-badge-ia {
+  font-weight: 700;
+  color: var(--accent);
+  animation: iaPulse 2.5s ease-in-out infinite;
+}
+
+@keyframes iaPulse {
+  0%, 100% { text-shadow: 0 0 4px rgba(108,92,231,0.3); opacity: 1; }
+  50% { text-shadow: 0 0 12px rgba(108,92,231,0.6); opacity: 0.85; }
+}
+
+/* ── Share Button ── */
+.share-fab {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  z-index: 100;
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  border: 1px solid var(--glass-border-strong);
+  background: rgba(15,20,37,0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+}
+
+.share-fab:hover {
+  transform: scale(1.08);
+  box-shadow: 0 4px 24px rgba(108,92,231,0.3);
+}
+
+.share-fab:active {
+  transform: scale(0.95);
+}
+
+.share-fab svg {
+  width: 20px;
+  height: 20px;
+}
+
+.share-toast {
+  position: fixed;
+  bottom: 88px;
+  right: 24px;
+  z-index: 100;
+  padding: 8px 16px;
+  border-radius: 8px;
+  background: rgba(108,92,231,0.9);
+  color: #fff;
+  font-size: 12px;
+  font-weight: 500;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: opacity 0.3s ease, transform 0.3s ease;
+  pointer-events: none;
+}
+
+.share-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ── Responsive ── */
+@media (max-width: 480px) {
+  .container { padding: 0 16px; }
+  .site-header { padding: 36px 0 24px; }
+  .kpi-card { padding: 16px; }
+  .bar-label { width: 80px; font-size: 10px; }
+  .bar-fill { font-size: 10px; min-width: 36px; }
+  .bar-track { height: 24px; }
+  .campaign-card { padding: 14px; }
+  .campaign-top { flex-wrap: wrap; }
+  .campaign-value { font-size: 16px; }
+  .donut-legend { grid-template-columns: 1fr; }
+  .donut-chart { width: 170px; height: 170px; }
+}
+
+@media (min-width: 640px) {
+  .kpi-grid { grid-template-columns: repeat(4, 1fr); }
+  .kpi-card.primary { grid-column: span 2; }
+  .donut-wrapper { flex-direction: row; gap: 32px; }
+}
+
+/* ── Reduced motion ── */
+@media (prefers-reduced-motion: reduce) {
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .bar-fill {
+    transform: scaleX(1);
+    transition: none;
+  }
+  .donut-chart svg circle {
+    transition: none;
+  }
+  body::before {
+    animation: none;
+  }
+  .ai-badge-ia {
+    animation: none;
+  }
+  .campaign-detail {
+    transition: none;
+  }
+  .share-fab {
+    transition: none;
+  }
+  .scroll-progress {
+    transition: none;
+  }
+}
+
+/* ── Print ── */
+@media print {
+  body { background: #fff; color: #111; }
+  body::before { display: none; }
+  .scroll-progress { display: none; }
+  .share-fab { display: none; }
+  .share-toast { display: none; }
+  .glass {
+    background: #f8f8fa;
+    border-color: #e0e0e0;
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
+  }
+  .kpi-card.primary { background: #f0eeff; }
+  .kpi-card.primary .kpi-value {
+    -webkit-text-fill-color: #6c5ce7;
+    color: #6c5ce7;
+  }
+  .reveal { opacity: 1; transform: none; transition: none; }
+  .bar-fill { transform: scaleX(1); transition: none; }
+  .donut-chart svg circle { transition: none; }
+  .campaign-detail { max-height: none; opacity: 1; }
+  .campaign-expand-icon { display: none; }
+  .text-secondary, .campaign-meta, .kpi-label, .footer-text {
+    color: #666;
+  }
+  .site-footer { border-top-color: #ddd; }
+  .ai-badge { border-color: #ccc; background: #f0f0f5; }
+  .ai-badge-ia { animation: none; color: #6c5ce7; }
+}
+</style>
+</head>
+<body>
+
+<!-- Scroll progress bar -->
+<div class="scroll-progress" aria-hidden="true"></div>
+
+<!-- ── Header ── -->
+<header class="site-header">
+  <div class="container">
+    <div class="brand reveal">
+      <span class="brand-dot"></span>
+      Avantis
+    </div>
+    <h1 class="header-title reveal">Relatório de Investimento</h1>
+    <p class="header-subtitle reveal">Meta Ads &mdash; <strong>Marcio Guadagno</strong></p>
+    <div class="header-period reveal">
+      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      19/mai/2026 — 12/jul/2026
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+
+    <!-- ── KPI Cards ── -->
+    <section class="kpi-grid" aria-label="Indicadores principais">
+      <div class="glass kpi-card primary reveal">
+        <div class="kpi-label">Total Investido</div>
+        <div class="kpi-value" data-counter="1731.54" data-prefix="R$ " data-decimals="2">R$ 0,00</div>
+        <div class="kpi-unit">em 6 campanhas</div>
+      </div>
+      <div class="glass kpi-card reveal">
+        <div class="kpi-label">Alcance</div>
+        <div class="kpi-small" data-counter="82623" data-decimals="0">0</div>
+        <div class="kpi-unit">pessoas</div>
+      </div>
+      <div class="glass kpi-card reveal">
+        <div class="kpi-label">Conversas</div>
+        <div class="kpi-small" data-counter="277" data-decimals="0">0</div>
+        <div class="kpi-unit">iniciadas</div>
+      </div>
+    </section>
+
+    <!-- ── Campaign List ── -->
+    <section class="campaigns-section" aria-label="Campanhas">
+      <div class="section-label reveal">Campanhas</div>
+      <div class="campaigns">
+
+        <div class="glass campaign-card reveal" data-campaign="leads-megahair">
+          <div class="campaign-top">
+            <div class="campaign-left">
+              <div class="campaign-name">
+                Leads MegaHair
+                <span class="badge badge-inactive">Inativa</span>
+              </div>
+              <div class="campaign-meta">
+                <span>Alcance: 12.103</span>
+                <span>141 conversas</span>
+                <span>CPR: R$ 5,19</span>
+              </div>
+            </div>
+            <div class="campaign-value"><span class="currency">R$</span> 732,47</div>
+            <svg class="campaign-expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="campaign-detail">
+            <div class="campaign-detail-inner">
+              Campanha de geração de leads para serviço de mega hair. Alcançou 12.103 pessoas e gerou 141 conversas com custo por resultado de R$ 5,19. Maior investimento do período.
+            </div>
+          </div>
+        </div>
+
+        <div class="glass campaign-card reveal" data-campaign="trafego-perfil">
+          <div class="campaign-top">
+            <div class="campaign-left">
+              <div class="campaign-name">
+                Tráfego para Perfil
+                <span class="badge badge-inactive">Inativa</span>
+              </div>
+              <div class="campaign-meta">
+                <span>Alcance: 49.257</span>
+                <span>5.067 visualizações</span>
+                <span>CPR: R$ 0,12</span>
+              </div>
+            </div>
+            <div class="campaign-value"><span class="currency">R$</span> 620,69</div>
+            <svg class="campaign-expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="campaign-detail">
+            <div class="campaign-detail-inner">
+              Melhor custo por resultado entre todas as campanhas: R$ 0,12 por visualização. Entregou 5.067 visualizações com alcance de 49.257 pessoas.
+            </div>
+          </div>
+        </div>
+
+        <div class="glass campaign-card reveal" data-campaign="realinhamento" style="border-color:rgba(108,92,231,0.25);">
+          <div class="campaign-top">
+            <div class="campaign-left">
+              <div class="campaign-name">
+                Realinhamento Capilar
+                <span class="badge badge-active">Ativa</span>
+              </div>
+              <div class="campaign-meta">
+                <span>Alcance: 8.628</span>
+                <span>63 conversas</span>
+                <span>CPR: R$ 4,97</span>
+              </div>
+              <div style="font-size:11px;color:rgba(240,240,245,0.35);margin-top:6px;line-height:1.4;">
+                Campanha iniciada em 02/Jul e otimizada em 10/Jul (R$ 208,91 + R$ 104,08)
+              </div>
+            </div>
+            <div class="campaign-value"><span class="currency">R$</span> 312,99</div>
+            <svg class="campaign-expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="campaign-detail">
+            <div class="campaign-detail-inner">
+              <div style="margin-bottom:8px;">Detalhamento por fase:</div>
+              <div class="mini-timeline">
+                <div class="timeline-item">
+                  <span class="timeline-dot"></span>
+                  <span class="timeline-label">02/Jul — Lançamento</span>
+                  <span class="timeline-value">R$ 208,91</span>
+                </div>
+                <div class="timeline-item">
+                  <span class="timeline-dot"></span>
+                  <span class="timeline-label">10/Jul — Otimização</span>
+                  <span class="timeline-value">R$ 104,08</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="glass campaign-card reveal" data-campaign="recrutamento-v2">
+          <div class="campaign-top">
+            <div class="campaign-left">
+              <div class="campaign-name">
+                Recrutamento Salão (v2)
+                <span class="badge badge-inactive">Inativa</span>
+              </div>
+              <div class="campaign-meta">
+                <span>Alcance: 1.969</span>
+                <span>45 conversas</span>
+                <span>CPR: R$ 0,62</span>
+              </div>
+            </div>
+            <div class="campaign-value"><span class="currency">R$</span> 27,78</div>
+            <svg class="campaign-expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="campaign-detail">
+            <div class="campaign-detail-inner">
+              Segunda versão da campanha de recrutamento. CPR de R$ 0,62 por conversa, com 45 conversas geradas a partir de 1.969 pessoas alcançadas.
+            </div>
+          </div>
+        </div>
+
+        <div class="glass campaign-card reveal" data-campaign="recrutamento">
+          <div class="campaign-top">
+            <div class="campaign-left">
+              <div class="campaign-name">
+                Recrutamento Salão
+                <span class="badge badge-inactive">Inativa</span>
+              </div>
+              <div class="campaign-meta">
+                <span>Alcance: 1.746</span>
+                <span>28 conversas</span>
+                <span>CPR: R$ 0,88</span>
+              </div>
+            </div>
+            <div class="campaign-value"><span class="currency">R$</span> 24,72</div>
+            <svg class="campaign-expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="campaign-detail">
+            <div class="campaign-detail-inner">
+              Primeira versão da campanha de recrutamento. Gerou 28 conversas com CPR de R$ 0,88 por conversa e alcance de 1.746 pessoas.
+            </div>
+          </div>
+        </div>
+
+        <div class="glass campaign-card reveal" data-campaign="branding">
+          <div class="campaign-top">
+            <div class="campaign-left">
+              <div class="campaign-name">
+                Branding e Reconhecimento
+                <span class="badge badge-active">Ativa</span>
+              </div>
+              <div class="campaign-meta">
+                <span>Alcance: 8.920</span>
+                <span>CPR: R$ 1,44</span>
+              </div>
+            </div>
+            <div class="campaign-value"><span class="currency">R$</span> 12,89</div>
+            <svg class="campaign-expand-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"/></svg>
+          </div>
+          <div class="campaign-detail">
+            <div class="campaign-detail-inner">
+              Campanha de branding e reconhecimento de marca. Alcançou 8.920 pessoas com custo por resultado de R$ 1,44. Menor investimento, focada em visibilidade.
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- ── Bar Chart ── -->
+    <section class="chart-section" aria-label="Gráfico de investimento por campanha">
+      <div class="section-label reveal">Investimento por campanha</div>
+      <div class="glass bar-chart reveal" data-bar-chart>
+        <div class="bar-row">
+          <div class="bar-label">Leads MegaHair</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:100%;background:var(--bar-1);">R$ 732</div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Tráfego para Perfil</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:84.7%;background:var(--bar-2);">R$ 621</div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Realinham. Capilar</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:42.7%;background:var(--bar-5);">R$ 313</div>
+          </div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Recrutamento (v2)</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:3.8%;background:var(--bar-4);"></div>
+          </div>
+          <span class="bar-value-outside">R$ 28</span>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Recrutamento Salão</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:3.4%;background:var(--bar-3);"></div>
+          </div>
+          <span class="bar-value-outside">R$ 25</span>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label">Branding</div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width:1.8%;background:var(--bar-6);"></div>
+          </div>
+          <span class="bar-value-outside">R$ 13</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Donut Chart ── -->
+    <section class="donut-section" aria-label="Distribuição do investimento">
+      <div class="section-label reveal">Distribuição percentual</div>
+      <div class="glass donut-wrapper reveal" data-donut-chart>
+        <div class="donut-chart">
+          <!--
+            Percentages (of R$ 1,731.54) — 6 campanhas consolidadas:
+            Leads MegaHair:         42.3%  -> 132.89
+            Tráfego para Perfil:    35.8%  -> 112.47
+            Realinhamento Capilar:  18.1%  -> 56.86  (02/Jul + 10/Jul combinados)
+            Recrutamento (v2):       1.6%  -> 5.03
+            Recrutamento Salão:      1.4%  -> 4.40
+            Branding:                0.7%  -> 2.20
+
+            SVG circle: r=50, C=314.16
+          -->
+          <svg viewBox="0 0 120 120">
+            <!-- Leads MegaHair 42.3% -->
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#6c5ce7" stroke-width="18"
+              stroke-dasharray="132.89 181.27" stroke-dashoffset="314.16" data-final-offset="0" />
+            <!-- Tráfego para Perfil 35.8% -->
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#a29bfe" stroke-width="18"
+              stroke-dasharray="112.47 201.69" stroke-dashoffset="314.16" data-final-offset="-132.89" />
+            <!-- Realinhamento Capilar 18.1% -->
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#fd79a8" stroke-width="18"
+              stroke-dasharray="56.86 257.30" stroke-dashoffset="314.16" data-final-offset="-245.36" />
+            <!-- Recrutamento v2 1.6% -->
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#55efc4" stroke-width="18"
+              stroke-dasharray="5.03 309.13" stroke-dashoffset="314.16" data-final-offset="-302.22" />
+            <!-- Recrutamento Salão 1.4% -->
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#74b9ff" stroke-width="18"
+              stroke-dasharray="4.40 309.76" stroke-dashoffset="314.16" data-final-offset="-307.25" />
+            <!-- Branding 0.7% -->
+            <circle cx="60" cy="60" r="50" fill="none" stroke="#ffeaa7" stroke-width="18"
+              stroke-dasharray="2.51 311.65" stroke-dashoffset="314.16" data-final-offset="-311.65" />
+          </svg>
+          <div class="donut-center">
+            <div class="donut-center-value">6</div>
+            <div class="donut-center-label">Campanhas</div>
+          </div>
+        </div>
+        <div class="donut-legend">
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#6c5ce7"></span>
+            <span class="legend-name">Leads MegaHair</span>
+            <span class="legend-pct">42,3%</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#a29bfe"></span>
+            <span class="legend-name">Tráfego para Perfil</span>
+            <span class="legend-pct">35,8%</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#fd79a8"></span>
+            <span class="legend-name">Realinham. Capilar</span>
+            <span class="legend-pct">18,1%</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#55efc4"></span>
+            <span class="legend-name">Recrutamento (v2)</span>
+            <span class="legend-pct">1,6%</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#74b9ff"></span>
+            <span class="legend-name">Recrutamento Salão</span>
+            <span class="legend-pct">1,4%</span>
+          </div>
+          <div class="legend-item">
+            <span class="legend-dot" style="background:#ffeaa7"></span>
+            <span class="legend-name">Branding</span>
+            <span class="legend-pct">0,7%</span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Destaques ── -->
+    <section class="insights-section" aria-label="Destaques">
+      <div class="section-label reveal">Destaques do Período</div>
+
+      <div class="glass insight-card reveal">
+        <div class="insight-title">Maior investimento: Leads MegaHair</div>
+        <div class="insight-text">
+          Concentrou 42,3% do orçamento total com R$ 732,47 investidos,
+          gerando 141 conversas de potenciais clientes interessados em mega hair.
+        </div>
+      </div>
+
+      <div class="glass insight-card reveal">
+        <div class="insight-title">Melhor custo por resultado: Tráfego para Perfil</div>
+        <div class="insight-text">
+          Com CPR de apenas R$ 0,12 por visualização, essa campanha entregou 5.067 visualizações
+          e alcançou 49.257 pessoas pelo menor custo unitário entre todas as campanhas.
+        </div>
+      </div>
+
+      <div class="glass insight-card reveal">
+        <div class="insight-title">Recrutamento eficiente</div>
+        <div class="insight-text">
+          As duas campanhas de recrutamento para o salão somaram 73 conversas com
+          investimento de apenas R$ 52,50, registrando CPRs de R$ 0,88 e R$ 0,62.
+        </div>
+      </div>
+
+      <div class="glass insight-card reveal">
+        <div class="insight-title">Realinhamento Capilar: 63 conversas</div>
+        <div class="insight-text">
+          A campanha de realinhamento capilar investiu R$ 312,99 e gerou 63 conversas
+          com alcance de 8.628 pessoas. Passou por uma otimização em 10/Jul para
+          melhorar a entrega de leads.
+        </div>
+      </div>
+    </section>
+
+  </div>
+</main>
+
+<!-- ── Footer ── -->
+<footer class="site-footer">
+  <div class="container">
+    <p class="footer-text">
+      Relatório gerado por <span class="footer-brand">Avantis</span> — Gestão de Tráfego Pago<br>
+      12 de julho de 2026
+    </p>
+    <div class="ai-badge">
+      Relatório gerado com <span class="ai-badge-ia">IA</span> — Avantis
+    </div>
+  </div>
+</footer>
+
+<!-- Share button -->
+<button class="share-fab" aria-label="Compartilhar relatório" type="button">
+  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+    <circle cx="18" cy="5" r="3"/><circle cx="6" cy="12" r="3"/><circle cx="18" cy="19" r="3"/>
+    <line x1="8.59" y1="13.51" x2="15.42" y2="17.49"/><line x1="15.41" y1="6.51" x2="8.59" y2="10.49"/>
+  </svg>
+</button>
+<div class="share-toast" aria-live="polite"></div>
+
+<script>
+(function() {
+  'use strict';
+
+  var prefersReduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // ── Scroll progress bar ──
+  var progressBar = document.querySelector('.scroll-progress');
+  var ticking = false;
+  function updateProgress() {
+    var scrollTop = window.pageYOffset || document.documentElement.scrollTop;
+    var docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    var pct = docHeight > 0 ? (scrollTop / docHeight) * 100 : 0;
+    progressBar.style.width = pct + '%';
+    ticking = false;
+  }
+  window.addEventListener('scroll', function() {
+    if (!ticking) {
+      requestAnimationFrame(updateProgress);
+      ticking = true;
+    }
+  }, { passive: true });
+
+  // ── Scroll reveal (IntersectionObserver) ──
+  var reveals = document.querySelectorAll('.reveal');
+  if (prefersReduced) {
+    reveals.forEach(function(el) { el.classList.add('visible'); });
+  } else {
+    var revealObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          // Stagger children within section
+          var parent = entry.target.closest('section, .kpi-grid, .campaigns, .site-header');
+          if (parent) {
+            var siblings = parent.querySelectorAll('.reveal:not(.visible)');
+            var idx = Array.prototype.indexOf.call(siblings, entry.target);
+            if (idx < 0) idx = 0;
+            entry.target.style.transitionDelay = (idx * 0.08) + 's';
+          }
+          entry.target.classList.add('visible');
+          revealObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.1, rootMargin: '0px 0px -40px 0px' });
+
+    reveals.forEach(function(el) { revealObserver.observe(el); });
+  }
+
+  // ── Animated number counters ──
+  function formatBR(value, decimals, prefix) {
+    var parts = value.toFixed(decimals).split('.');
+    var intPart = parts[0].replace(/\B(?=(\d{3})+(?!\d))/g, '.');
+    var result = decimals > 0 ? intPart + ',' + parts[1] : intPart;
+    return (prefix || '') + result;
+  }
+
+  function easeOutCubic(t) { return 1 - Math.pow(1 - t, 3); }
+
+  function animateCounter(el) {
+    var target = parseFloat(el.getAttribute('data-counter'));
+    var decimals = parseInt(el.getAttribute('data-decimals'), 10) || 0;
+    var prefix = el.getAttribute('data-prefix') || '';
+    var duration = 1500;
+    var start = null;
+
+    function step(ts) {
+      if (!start) start = ts;
+      var progress = Math.min((ts - start) / duration, 1);
+      var eased = easeOutCubic(progress);
+      var current = eased * target;
+      el.textContent = formatBR(current, decimals, prefix);
+      if (progress < 1) requestAnimationFrame(step);
+    }
+
+    if (prefersReduced) {
+      el.textContent = formatBR(target, decimals, prefix);
+    } else {
+      requestAnimationFrame(step);
+    }
+  }
+
+  var counters = document.querySelectorAll('[data-counter]');
+  if (counters.length) {
+    var counterObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          animateCounter(entry.target);
+          counterObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    counters.forEach(function(el) { counterObserver.observe(el); });
+  }
+
+  // ── Animated bar chart ──
+  var barChart = document.querySelector('[data-bar-chart]');
+  if (barChart) {
+    var barObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var bars = entry.target.querySelectorAll('.bar-fill');
+          bars.forEach(function(bar, i) {
+            if (prefersReduced) {
+              bar.classList.add('animated');
+            } else {
+              setTimeout(function() { bar.classList.add('animated'); }, i * 100);
+            }
+          });
+          barObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.2 });
+    barObserver.observe(barChart);
+  }
+
+  // ── Animated donut chart ──
+  var donutWrapper = document.querySelector('[data-donut-chart]');
+  if (donutWrapper) {
+    var donutObserver = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          var circles = entry.target.querySelectorAll('svg circle');
+          circles.forEach(function(circle, i) {
+            var finalOffset = circle.getAttribute('data-final-offset');
+            if (finalOffset !== null) {
+              if (prefersReduced) {
+                circle.style.strokeDashoffset = finalOffset;
+              } else {
+                var delay = i * 200;
+                circle.style.transitionDelay = delay + 'ms';
+                circle.style.transitionDuration = '0.8s';
+                // Force reflow then animate
+                setTimeout(function() {
+                  circle.style.strokeDashoffset = finalOffset;
+                }, 50 + delay);
+              }
+            }
+          });
+          donutObserver.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.3 });
+    donutObserver.observe(donutWrapper);
+  }
+
+  // ── Campaign accordion ──
+  var cards = document.querySelectorAll('.campaign-card');
+  cards.forEach(function(card) {
+    card.addEventListener('click', function() {
+      var wasExpanded = card.classList.contains('expanded');
+      // Collapse all
+      cards.forEach(function(c) { c.classList.remove('expanded'); });
+      // Toggle clicked
+      if (!wasExpanded) card.classList.add('expanded');
+    });
+  });
+
+  // ── Share button ──
+  var shareBtn = document.querySelector('.share-fab');
+  var shareToast = document.querySelector('.share-toast');
+  var toastTimer;
+
+  function showToast(msg) {
+    shareToast.textContent = msg;
+    shareToast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(function() { shareToast.classList.remove('show'); }, 2500);
+  }
+
+  if (shareBtn) {
+    shareBtn.addEventListener('click', function() {
+      var shareData = {
+        title: 'Relatório de Investimento — Avantis',
+        text: 'Relatório Meta Ads — Marcio Guadagno (19/mai–12/jul 2026)',
+        url: window.location.href
+      };
+
+      if (navigator.share) {
+        navigator.share(shareData).catch(function() {});
+      } else {
+        // Fallback: copy link
+        if (navigator.clipboard && navigator.clipboard.writeText) {
+          navigator.clipboard.writeText(window.location.href).then(function() {
+            showToast('Link copiado!');
+          }).catch(function() {
+            showToast('Não foi possível copiar');
+          });
+        } else {
+          var ta = document.createElement('textarea');
+          ta.value = window.location.href;
+          ta.style.position = 'fixed';
+          ta.style.left = '-9999px';
+          document.body.appendChild(ta);
+          ta.select();
+          try { document.execCommand('copy'); showToast('Link copiado!'); }
+          catch(e) { showToast('Não foi possível copiar'); }
+          document.body.removeChild(ta);
+        }
+      }
+    });
+  }
+
+})();
+</script>
+
+</body>
+</html>
